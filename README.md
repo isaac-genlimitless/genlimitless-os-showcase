@@ -1,8 +1,8 @@
 # GenLimitless OS (showcase)
 
 A personal AI operating system: one Next.js app where a team of AI agents runs email, calendar,
-texts, files, meetings and research for one person. A Chief of Staff agent takes every request,
-delegates to specialist agents, checks their work and reports back. **Every send, delete or code
+texts, files, meetings and research for individuals and SMBs. A Chief of Staff agent takes every request,
+delegates to specialist agents, checks their work and reports back. **Every significant send, delete or code
 change waits for the owner's approval.**
 
 > This is a sanitized showcase copy. Personal data, private integrations, deployment scripts and
