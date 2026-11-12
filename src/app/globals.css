@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+/* Files editor: Notion-style callout block (see src/components/calloutBlock.tsx) */
+.callout {
+  --callout-tint: var(--muted);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--callout-tint) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--callout-tint) 25%, transparent);
+}
+.callout[data-color="blue"] { --callout-tint: #2ea3f2; }
+.callout[data-color="green"] { --callout-tint: #34a853; }
+.callout[data-color="yellow"] { --callout-tint: #d9a400; }
+.callout[data-color="red"] { --callout-tint: #e5484d; }
+.callout[data-color="purple"] { --callout-tint: #8e4ec6; }
+.callout[data-color="orange"] { --callout-tint: #f76b15; }
+.callout[data-color="pink"] { --callout-tint: #d6409f; }
+.callout-text { flex: 1; min-width: 0; }
+.callout-icon-wrap { position: relative; flex: none; }
+.callout-icon {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 18px;
+  text-align: center;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.callout-icon:hover { background: color-mix(in srgb, var(--foreground) 10%, transparent); }
+.callout-popover {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  z-index: 50;
+  width: 230px;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+.callout-emojis { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
+.callout-emojis button { font-size: 16px; padding: 2px; border-radius: 4px; }
+.callout-emojis button:hover { background: color-mix(in srgb, var(--foreground) 10%, transparent); }
+.callout-colors { display: flex; gap: 6px; margin-top: 8px; }
+.callout-swatch {
+  --callout-tint: var(--muted);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--callout-tint);
+}
+.callout-swatch[data-color="blue"] { --callout-tint: #2ea3f2; }
+.callout-swatch[data-color="green"] { --callout-tint: #34a853; }
+.callout-swatch[data-color="yellow"] { --callout-tint: #d9a400; }
+.callout-swatch[data-color="red"] { --callout-tint: #e5484d; }
+.callout-swatch[data-color="purple"] { --callout-tint: #8e4ec6; }
+.callout-swatch[data-color="orange"] { --callout-tint: #f76b15; }
+.callout-swatch[data-color="pink"] { --callout-tint: #d6409f; }
+
+:root {
+  /* Follows the Mac's appearance (System Settings → Appearance → Auto): light by day, dark at
+     night, switching live. Dark is the original palette; light is below. */
+  color-scheme: light dark;
+  --background: #0a0a0a;
+  --panel: #141414;
+  --panel-border: #262626;
+  --foreground: #f2f2f2;
+  --muted: #9a9a9a;
+  --gold: #d2ae6d; /* fills: buttons, badges, the user's chat bubble */
+  --gold-soft: #b6935a;
+  --accent: #d2ae6d; /* gold as text/icons: needs more contrast on light backgrounds */
+  --blue: #2ea3f2;
+  --wash-1: rgba(0, 0, 0, 0.2); /* hovers, subtle wells */
+  --wash-2: rgba(0, 0, 0, 0.3); /* inputs, code, cards inside panels */
+  --wash-3: rgba(0, 0, 0, 0.45); /* selected rows */
+  --danger: #f87171;
+  --success: #34d399;
+  --info: #60a5fa;
+  --font-montserrat: var(--font-montserrat-loaded, "Montserrat"), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #f6f5f1;
+    --panel: #ffffff;
+    --panel-border: #e3e0d8;
+    --foreground: #1b1b1b;
+    --muted: #6b6860;
+    --gold: #cfa95f;
+    --gold-soft: #b8924a;
+    --accent: #8a6421;
+    --blue: #1a7fc2;
+    --wash-1: rgba(60, 50, 30, 0.05);
+    --wash-2: rgba(60, 50, 30, 0.07);
+    --wash-3: rgba(60, 50, 30, 0.12);
+    --danger: #c62828;
+    --success: #1b7f4d;
+    --info: #1f6fc4;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-panel: var(--panel);
+  --color-panel-border: var(--panel-border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-accent: var(--accent);
+  --color-wash-1: var(--wash-1);
+  --color-wash-2: var(--wash-2);
+  --color-wash-3: var(--wash-3);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-info: var(--info);
+  --color-blue: var(--blue);
+  --font-display: var(--font-montserrat);
+  --font-sans: var(--font-montserrat);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-montserrat);
+}
+
+button, input, select, textarea { font-family: inherit; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-montserrat); }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.markdown-body p {
+  margin: 0 0 0.5em 0;
+}
+.markdown-body p:last-child {
+  margin-bottom: 0;
+}
+.markdown-body ul,
+.markdown-body ol {
+  margin: 0 0 0.5em 1.25em;
+  padding: 0;
+}
+.markdown-body ul {
+  list-style: disc;
+}
+.markdown-body ol {
+  list-style: decimal;
+}
+.markdown-body li {
+  margin-bottom: 0.15em;
+}
+.markdown-body strong {
+  font-weight: 700;
+}
+.markdown-body a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.markdown-body code {
+  background: var(--wash-2);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.85em;
+}
+.markdown-body pre {
+  background: var(--wash-3);
+  border-radius: 6px;
+  padding: 0.6em 0.8em;
+  overflow-x: auto;
+  margin: 0.4em 0;
+}
+.markdown-body pre code {
+  background: none;
+  padding: 0;
+}
+.markdown-body blockquote {
+  border-left: 2px solid var(--panel-border);
+  padding-left: 0.75em;
+  color: var(--muted);
+  margin: 0.4em 0;
+}
+.markdown-body table {
+  border-collapse: collapse;
+  margin: 0.4em 0;
+}
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid var(--panel-border);
+  padding: 0.3em 0.6em;
+}
+.markdown-body details { margin: 0.5rem 0; }
+.markdown-body summary { cursor: pointer; font-weight: 600; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: 600; margin: 0.75rem 0 0.35rem; }
+.markdown-body img { max-width: 100%; border-radius: 0.375rem; }
+.markdown-body hr { border: 0; border-top: 1px solid var(--panel-border, #333); margin: 0.75rem 0; }
+
+/* ---- Mobile / phone overrides (unlayered so they win over Tailwind utilities) ---- */
+@media (max-width: 767px) {
+  html, body { max-width: 100vw; overflow-x: hidden; }
+  .px-8, .px-10, .px-12 { padding-left: 1rem; padding-right: 1rem; }
+  .p-8, .p-10 { padding: 1rem; }
+  input:not([type=checkbox]):not([type=radio]), textarea, select { font-size: 16px; }
+  .markdown-body table { display: block; overflow-x: auto; max-width: 100%; }
+  .chat-dock { position: fixed; inset: 0; width: 100% !important; height: 100dvh; z-index: 60; border-left: 0; }
+}
+
+@media (max-width: 767px), (pointer: coarse) {
+  button, [role=button], select, summary, input:not([type=checkbox]):not([type=radio]) { min-height: 44px; }
+  button[aria-label], button[title="Drag to resize"] { min-width: 44px; }
+  nav a { min-height: 44px; }
+}
+
+/* Team page on phones: clear the floating "Ask Chief of Staff" launcher and let long strings wrap */
+@media (max-width: 767px) {
+  .team-page { padding-bottom: 6rem; }
+  .team-page .break-anywhere { overflow-wrap: anywhere; word-break: break-word; }
+}
+
+/* Tasks page on phones: clear the floating "Ask Chief of Staff" launcher */
+@media (max-width: 767px) {
+  .tasks-page { padding-bottom: 6rem; }
+}
+
+/* long words/links wrap everywhere */
+.whitespace-pre-wrap, .markdown-body, .page-editor { overflow-wrap: anywhere; }
+img, video, canvas, svg, iframe { max-width: 100%; }
+img, video { height: auto; }
+.page-editor img, .page-editor video, .page-editor iframe { max-width: 100%; }
+@media (max-width: 767px) {
+  .markdown-body pre, .page-editor pre { white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
+  .page-editor table { display: block; max-width: 100%; overflow-x: auto; }
+  main, [data-testid="chat-messages"] { min-width: 0; }
+}
+
+/* Files full-screen mode: hide the app navigation (desktop sidebar + mobile top bar). */
+html[data-focus-mode] [data-app-nav] { display: none !important; }
+html[data-focus-mode] body > main { padding-top: 0 !important; }
+
+/* Files: @Chief mentions (the result card appears on hover/tap). */
+/* @ mention chips: links to a task, meeting or page (see src/lib/mentions.ts). */
+.page-editor a[href^="/tasks?id="],
+.page-editor a[href^="/meetings?id="],
+.page-editor a[href^="/files?id="] {
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 6px;
+  padding: 0 4px;
+  text-decoration: none;
+}
+/* In chat bubbles (gold user bubble and dark panel bubble): inherit the bubble's text colour so it
+   is readable on both, with a neutral translucent chip behind it. */
+.mention-chip {
+  font-weight: 600;
+  color: inherit;
+  background: rgba(128, 128, 128, 0.25);
+  border-radius: 6px;
+  padding: 0 4px;
+  text-decoration: none;
+}
+.chief-mention-active { font-weight: 700; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; color: var(--accent); }
+.chief-mention-pending { font-weight: 700; color: var(--blue); text-decoration: underline; text-decoration-color: var(--blue); text-underline-offset: 2px; }
+.chief-mention { cursor: pointer; }
+
+/* Hover pill: bars, toolbars, breadcrumbs, nav. Text colour never changes on hover; the item gets a slightly darker/greyer rounded background instead. */
+.hover-pill { border-radius: 8px; padding: 0.25rem 0.5rem; transition: background-color 0.15s ease; }
+.hover-pill:hover, .hover-pill:focus-visible { background: var(--wash-2); text-decoration: none; }
+
+/* Pull-to-refresh (src/components/PullToRefresh.tsx). The document never scrolls (body is overflow-hidden, <main> scrolls),
+   so turn off the root's own overscroll/native refresh (no double refresh on Android Chrome, no iOS standalone bounce fighting the gesture),
+   and keep <main>'s bounce local so the pull still registers. */
+html, body { overscroll-behavior-y: none; }
+main { overscroll-behavior-y: contain; }
