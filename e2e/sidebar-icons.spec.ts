@@ -19,17 +19,9 @@ test("sidebar nav icons are ~22px and all the same gold", async ({ page }) => {
     .first()
     .evaluate((el) => getComputedStyle(el).color);
   expect([...colors][0]).toBe(logoColor);
-  for (const name of ["Chat", "Today", "Decisions", "Files", "The Creation", "Calendar", "Tasks", "Budgets", "Meetings", "Team", "Communications", "Partner admin", "Job Engine", "Settings"]) {
+  for (const name of ["Chat", "Today", "Decisions", "Files", "The Creation", "Calendar", "Tasks", "Meetings", "Team", "Communications", "Settings"]) {
     await expect(page.locator("aside[data-app-nav]").getByRole("link", { name })).toBeVisible();
   }
-});
-
-test("sidebar has a Partner admin link to /birthday-admin", async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/");
-  const link = page.locator("aside[data-app-nav]").getByRole("link", { name: "Partner admin" });
-  await expect(link).toBeVisible();
-  await expect(link).toHaveAttribute("href", "/birthday-admin");
 });
 
 test("sidebar logo fits inside the sidebar", async ({ page }) => {

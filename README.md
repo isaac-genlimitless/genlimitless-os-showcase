@@ -37,15 +37,18 @@ change waits for the owner's approval.**
 ## Stack
 
 Next.js (App Router) · TypeScript · SQLite (`better-sqlite3`) · Claude Agent SDK · BlockNote editor ·
-Playwright (about 190 e2e specs in `e2e/`).
+Playwright (about 190 e2e specs in `e2e/`; a few were written against features removed from this showcase and may fail).
 
 ## Running it locally
 
+Requires Node 20.9+ (a Next.js 16 requirement).
+
 ```bash
 npm install
+cp .env.example .env.local   # set GLOS_ROOT to a writable folder (required); the rest is optional
 npm run dev -- -p 3100
 ```
 
-Configuration is read from environment variables (for example `SESSION_SECRET`, `GMAIL_USER`,
+Configuration is read from environment variables (`GLOS_ROOT` is required to boot; see `.env.example`; others include `SESSION_SECRET`, `GMAIL_USER`,
 `GMAIL_APP_PASSWORD`, `GOOGLE_CLIENT_ID`, `NOTION_TOKEN`, `GITHUB_REPO`). Integrations without
-credentials stay off. Data lives outside the repo in `GENLIMITLESS_DATA_DIR`. On a brand-new data folder the first `npm run build` can fail while the database initialises; run it again.
+credentials stay off. Data lives outside the repo in `GENLIMITLESS_DATA_DIR`.

@@ -14,6 +14,34 @@ if (underTest) {
 }
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
+// Schema setup below is a long run of check-then-create statements. On a brand-new database, several processes
+// starting together (e.g. `next build` page-data workers) race on it: "table X already exists", "duplicate column",
+// UNIQUE violations on seed rows. Setup is idempotent when run one process at a time, so serialize it across
+// processes with an atomic lock directory; the last line of this module releases it. A lock left by a crashed
+// process is considered stale after 30s.
+const INIT_LOCK = path.join(dataDir, ".db-init.lock");
+function acquireInitLock(): void {
+  const started = Date.now();
+  for (;;) {
+    try {
+      fs.mkdirSync(INIT_LOCK);
+      return;
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code !== "EEXIST") return; // can't lock (read-only dir etc.): proceed unlocked
+      try {
+        if (Date.now() - fs.statSync(INIT_LOCK).mtimeMs > 30_000) fs.rmSync(INIT_LOCK, { recursive: true, force: true });
+      } catch { /* released by the holder meanwhile */ }
+      if (Date.now() - started > 60_000) return; // give up waiting; setup is still idempotent, just racy
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
+    }
+  }
+}
+function releaseInitLock(): void {
+  try { fs.rmSync(INIT_LOCK, { recursive: true, force: true }); } catch { /* already gone */ }
+}
+acquireInitLock();
+process.once("exit", releaseInitLock);
+
 const db = new Database(path.join(dataDir, "genlimitless.db"));
 db.pragma("journal_mode = WAL");
 
@@ -832,3 +860,5 @@ export function recordJobRun(job: string, runKey: string, status: "done" | "fail
     })();
   }
 }
+
+releaseInitLock();

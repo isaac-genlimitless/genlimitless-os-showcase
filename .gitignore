@@ -53,3 +53,5 @@ next-env.d.ts
 *.swp
 *.swo
 /data/backups/
+
+!.env.example
